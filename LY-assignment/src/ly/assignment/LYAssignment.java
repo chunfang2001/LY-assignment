@@ -5,9 +5,12 @@
  */
 package ly.assignment;
 
+import java.util.HashMap;
 import java.util.Scanner;
+import static ly.assignment.AdminPart.*;
 import static ly.assignment.AdminQuery.*;
 import static ly.assignment.LoginPart.*;
+import static ly.assignment.UserQuery.*;
 
 /**
  *
@@ -61,7 +64,26 @@ public class LYAssignment {
                     }
             }
             if(user!=null){
-                
+                char choice = user_choice(sc);
+                switch(choice){
+                    case 'a':
+                        makeBooking();
+                        break;
+                    case 'b':
+                        showBooking();
+                        break;
+                    case 'c':
+                        break;
+                    case 'd':
+                        user = null;
+                        System.out.println("log out successfully");
+                        break;
+                    case 'e':
+                        changePassword(sc);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
@@ -75,35 +97,48 @@ public class LYAssignment {
         }
         
     }
-    
-    public static char admin_choice(Scanner sc){
-        System.out.println("A. Add new room");
-        System.out.println("B. Edit room details");
-        System.out.println("C. Show all rooms");
-        System.out.print("What is your request now? Please select [A-C]: ");
+    public static char user_choice(Scanner sc){
+        System.out.println("A. Make Booking");
+        System.out.println("B. Booking List");
+        System.out.println("C. Transaction History");
+        System.out.println("D. Logout");
+        System.out.println("E. Reset Password");
+        System.out.print("What is your request now? Please select [A-D]: ");
         char i = sc.nextLine().charAt(0);
         i = Character.toLowerCase(i);
         System.out.println("");
         return i;
     }
-    
-    public static void addRoom(Scanner sc){
-        System.out.print("RoomID:");
-        String roomID = sc.nextLine();
-        System.out.print("amount of guest:");
-        int amountOfGuest = sc.nextInt();
-        System.out.print("amount of bed:");
-        int amountOfBed = sc.nextInt();
-        System.out.print("Price: ");
-        int price = sc.nextInt();
-        sc.nextLine();
-        addRoomQuery(db, roomID, amountOfGuest,amountOfBed,price);
+    public static void changePassword(Scanner sc){
+        System.out.println("========== change Password Phase ==========");
+        System.out.print("Please enter your new password: ");
+        String password = sc.nextLine();
+        boolean done = changePasswordQuery(db,user.getEmail(),password);
+        if(done==false){
+            System.out.println("Something get wrong");
+        }else{
+            System.out.println("The password changed successful");
+        }
     }
-    
-    public static void editRoom(Scanner sc){
-        showRoomQuery(db);
-        System.out.print("Room ID:");
-        String roomID = sc.nextLine();
-        editRoomDetail(db,roomID);
+    public static void showBooking(){
+        getBooking(db);
+    }
+    public static void makeBooking(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("List of rooms");
+        System.out.println("");
+        HashMap<Integer,String> map = getRoomIDQuery(db);
+        System.out.print("pick the number in bil to make booking: ");
+        int c = sc.nextInt();
+        if(map.get(c)==null){
+            System.out.println("Something wents wrong");
+        }else{
+            boolean a = makeBookingQuery(db,map.get(c));
+            if(a){
+                System.out.println("booking made successfully");
+            }else{
+                System.out.println("booking fails to be made");
+            }
+        } 
     }
 }
