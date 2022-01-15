@@ -41,4 +41,27 @@ public class LoginQuery {
         }
         return null;
     }
+    public static boolean forgetPasswordQuery(Database db, String email,String password){
+        try{
+            ResultSet rs = db.getConnection().prepareStatement(String.format("Select * from USER where email = '%s'",email,password)).executeQuery();
+            if(rs.next()){
+                db.getConnection().prepareStatement(String.format("UPDATE USER SET `password` = '%s' WHERE email = '%s'",password,email)).executeUpdate();
+                return true;
+            }       
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+    public static boolean loginQueryAdmin(Database db, String email,String password){
+        try{
+            ResultSet rs = db.getConnection().prepareStatement(String.format("Select * from admin where email = '%s' AND password ='%s'",email,password)).executeQuery();
+            if(rs.next()){
+                return true;
+            }       
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
 }

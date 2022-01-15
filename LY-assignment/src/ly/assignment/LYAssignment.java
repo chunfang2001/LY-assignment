@@ -15,6 +15,7 @@ import static ly.assignment.LoginQuery.*;
 public class LYAssignment {
     public static Database db;
     public static User user;
+    public static boolean admin = false;
     /**
      * @param args the command line arguments
      */
@@ -28,11 +29,13 @@ public class LYAssignment {
                 customerRegister(sc);
                 break;
             case 'b':
+                adminLogin(sc);
                 break;
             case 'c':
                 customerLogin(sc);
                 break;
             case 'd':
+                forgetPassword(sc);
                 break;
             default:
                 break;
@@ -57,7 +60,7 @@ public class LYAssignment {
         System.out.println("B. Login as Admin");
         System.out.println("C. Login as Customer");
         System.out.println("D. Forget Password");
-        System.out.print("What is your request now? Please select [A-C]: ");
+        System.out.print("What is your request now? Please select [A-D]: ");
         char i = sc.nextLine().charAt(0);
         i = Character.toLowerCase(i);
         System.out.println("");
@@ -93,4 +96,31 @@ public class LYAssignment {
         }
     }
     
+    public static void forgetPassword(Scanner sc){
+        System.out.println("========== Reset Password Phase ==========");
+        System.out.print("Please enter your email: ");
+        String email = sc.nextLine();
+        System.out.print("Please enter your new password: ");
+        String password = sc.nextLine();
+        boolean done = forgetPasswordQuery(db,email,password);
+        if(done==false){
+            System.out.println("Something get wrong");
+        }else{
+            System.out.println("The password changed successful");
+        }
+    }
+    public static void adminLogin(Scanner sc){
+        System.out.println("========== Customer Login Phase ==========");
+        System.out.print("Please enter your email: ");
+        String email = sc.nextLine();
+        System.out.print("Please enter your password: ");
+        String password = sc.nextLine();
+        admin = loginQueryAdmin(db,email,password);
+        if(admin==false){
+            System.out.println("Something get wrong");
+        }else{
+            System.out.println("========== Welcome back Admin ==========");
+            System.out.println("");
+        }
+    }
 }
