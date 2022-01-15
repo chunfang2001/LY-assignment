@@ -6,7 +6,8 @@
 package ly.assignment;
 
 import java.util.Scanner;
-import static ly.assignment.LoginQuery.*;
+import static ly.assignment.AdminQuery.*;
+import static ly.assignment.LoginPart.*;
 
 /**
  *
@@ -23,24 +24,46 @@ public class LYAssignment {
         // TODO code application logic here
         Scanner sc = new Scanner(System.in);
         init();
-        char welcome_choice = welcome(sc);
-        switch(welcome_choice){
-            case 'a':
-                customerRegister(sc);
-                break;
-            case 'b':
-                adminLogin(sc);
-                break;
-            case 'c':
-                customerLogin(sc);
-                break;
-            case 'd':
-                forgetPassword(sc);
-                break;
-            default:
-                break;
+        while(true){
+            if(!admin&&user==null){
+                char welcome_choice = welcome(sc);
+                    switch(welcome_choice){
+                        case 'a':
+                            customerRegister(sc);
+                            break;
+                        case 'b':
+                            adminLogin(sc);
+                            break;
+                        case 'c':
+                            customerLogin(sc);
+                            break;
+                        case 'd':
+                            forgetPassword(sc);
+                            break;
+                        default:
+                            break;
+                    }
+            }
+            if(admin){
+                char choice = admin_choice(sc);
+                switch(choice){
+                        case 'a':
+                            addRoom(sc);
+                            break;
+                        case 'b':
+                            editRoom(sc);
+                            break;
+                        case 'c':
+                            showRoomQuery(db);
+                            break;
+                        default:
+                            break;
+                    }
+            }
+            if(user!=null){
+                
+            }
         }
-        
     }
     
     public static void init(){
@@ -53,74 +76,34 @@ public class LYAssignment {
         
     }
     
-    public static char welcome(Scanner sc){
-        System.out.println("========== Welcome to Hotel ==========");
-        System.out.println("");
-        System.out.println("A. Register");
-        System.out.println("B. Login as Admin");
-        System.out.println("C. Login as Customer");
-        System.out.println("D. Forget Password");
-        System.out.print("What is your request now? Please select [A-D]: ");
+    public static char admin_choice(Scanner sc){
+        System.out.println("A. Add new room");
+        System.out.println("B. Edit room details");
+        System.out.println("C. Show all rooms");
+        System.out.print("What is your request now? Please select [A-C]: ");
         char i = sc.nextLine().charAt(0);
         i = Character.toLowerCase(i);
         System.out.println("");
         return i;
     }
     
-    public static void customerRegister(Scanner sc){
-        System.out.println("========== Customer Register Phase ==========");
-        System.out.print("Please enter your email: ");
-        String email = sc.nextLine();
-        System.out.print("Please enter your password: ");
-        String password = sc.nextLine();
-        user = registerQuery(db,email,password);
-        if(user==null){
-            System.out.println("Something get wrong");
-        }else{
-            System.out.println("========== Welcome first time user ==========");
-        }
+    public static void addRoom(Scanner sc){
+        System.out.print("RoomID:");
+        String roomID = sc.nextLine();
+        System.out.print("amount of guest:");
+        int amountOfGuest = sc.nextInt();
+        System.out.print("amount of bed:");
+        int amountOfBed = sc.nextInt();
+        System.out.print("Price: ");
+        int price = sc.nextInt();
+        sc.nextLine();
+        addRoomQuery(db, roomID, amountOfGuest,amountOfBed,price);
     }
     
-    public static void customerLogin(Scanner sc){
-        System.out.println("========== Customer Login Phase ==========");
-        System.out.print("Please enter your email: ");
-        String email = sc.nextLine();
-        System.out.print("Please enter your password: ");
-        String password = sc.nextLine();
-        user = loginQuery(db,email,password);
-        if(user==null){
-            System.out.println("Something get wrong");
-        }else{
-            System.out.println("========== Welcome back ==========");
-            System.out.println("");
-        }
-    }
-    
-    public static void forgetPassword(Scanner sc){
-        System.out.println("========== Reset Password Phase ==========");
-        System.out.print("Please enter your email: ");
-        String email = sc.nextLine();
-        System.out.print("Please enter your new password: ");
-        String password = sc.nextLine();
-        boolean done = forgetPasswordQuery(db,email,password);
-        if(done==false){
-            System.out.println("Something get wrong");
-        }else{
-            System.out.println("The password changed successful");
-        }
-    }
-    public static void adminLogin(Scanner sc){
-        System.out.println("========== Admin Login Phase ==========");
-        System.out.print("Please enter your email: ");
-        String email = sc.nextLine();
-        System.out.print("Please enter your password: ");
-        String password = sc.nextLine();
-        admin = loginQueryAdmin(db,email,password);
-        if(admin==false){
-            System.out.println("Something get wrong");
-        }else{
-            System.out.println("========== Welcome back Admin ==========");
-            System.out.println("");
-        }
+    public static void editRoom(Scanner sc){
+        showRoomQuery(db);
+        System.out.print("Room ID:");
+        String roomID = sc.nextLine();
+        editRoomDetail(db,roomID);
     }
 }
