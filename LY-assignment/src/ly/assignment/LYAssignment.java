@@ -73,6 +73,7 @@ public class LYAssignment {
                         showBooking();
                         break;
                     case 'c':
+                        getTransaction(sc);
                         break;
                     case 'd':
                         giveReview(sc);
@@ -187,7 +188,22 @@ public class LYAssignment {
         System.out.println("Make transaction ");
         System.out.print("Please enter your roomID: ");
         String roomID= sc.nextLine();
-        System.out.print("Please enter the number of date: ");
-        int number = sc.nextInt();
+        if(checkExist(db,roomID)){
+            System.out.print("Please enter the number of days: ");
+            int number = sc.nextInt();
+            sc.nextLine();
+            if(makeTransactionQuery(db,number,roomID)){
+                System.out.println("transaction successful");
+            }else{
+                System.out.println("transaction failed");
+            }
+        }else{
+            System.out.println("invalid room id");
+        }
+    }
+    public static void getTransaction(Scanner sc){
+        System.out.println("Transaction history");
+        System.out.println("");
+        getTransactionQuery(db);
     }
 }

@@ -118,4 +118,37 @@ public class UserQuery {
             System.out.println(e.getMessage());
         }
     }
+    public static boolean makeTransactionQuery(Database db,int days,String roomID){
+        try{
+            ResultSet rs = db.getConnection().prepareStatement(String.format("Select * from ROOM where roomID = '%s'",roomID)).executeQuery();
+            if(rs.next()){
+                int price = rs.getInt("price");
+                try{
+                    db.getConnection().prepareStatement(String.format("Insert into TRANSACTION(`days`,`amountPaid`,`roomPrice`,`successful`,`userID`) values('%d','%d','%d','%d','%d')",days,days*price,price,1,user.getId())).executeUpdate();
+                }catch(Exception e){
+                    System.out.println(e.getMessage());
+                }
+            }
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return true;
+    }
+    public static void getTransactionQuery(Database db){
+        try{
+            ResultSet rs = db.getConnection().prepareStatement(String.format("Select * from TRANSACTION where userID='%d'",user.getId())).executeQuery();
+            int count = 1;
+            while(rs.next()){
+                System.out.println("Transaction "+count);
+                System.out.println("Room Price: "+rs.getString("roomPrice"));
+                System.out.println("Days: "+rs.getString("days"));
+                System.out.println("Amount Paid: "+rs.getString("amountPaid"));
+                System.out.println("");
+                count++;
+            }
+            
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
 }
