@@ -75,11 +75,20 @@ public class LYAssignment {
                     case 'c':
                         break;
                     case 'd':
+                        giveReview(sc);
+                        break;
+                    case 'e':
                         user = null;
                         System.out.println("log out successfully");
                         break;
-                    case 'e':
+                    case 'f':
                         changePassword(sc);
+                        break;
+                    case 'g':
+                        viewRoomDetail(sc);
+                        break;
+                    case 'h':
+                        makeTransaction(sc);
                         break;
                     default:
                         break;
@@ -101,8 +110,11 @@ public class LYAssignment {
         System.out.println("A. Make Booking");
         System.out.println("B. Booking List");
         System.out.println("C. Transaction History");
-        System.out.println("D. Logout");
-        System.out.println("E. Reset Password");
+        System.out.println("D. Give Review");
+        System.out.println("E. Logout");
+        System.out.println("F. Reset Password");
+        System.out.println("G. View room detail");
+        System.out.println("H. Make transaction");
         System.out.print("What is your request now? Please select [A-D]: ");
         char i = sc.nextLine().charAt(0);
         i = Character.toLowerCase(i);
@@ -140,5 +152,42 @@ public class LYAssignment {
                 System.out.println("booking fails to be made");
             }
         } 
+    }
+    public static void giveReview(Scanner sc){
+        System.out.println("Give Review to Room");
+        System.out.print("Enter room ID: ");
+        String roomID = sc.nextLine();
+        if(checkExist(db,roomID)){
+            System.out.print("Enter Comment: ");
+            String comment = sc.nextLine();
+            System.out.print("Enter Rating[0-5]: ");
+            double rating = sc.nextDouble();
+            sc.nextLine();
+            giveReviewQuery(db,roomID,comment,rating);
+        }else{
+            System.out.println("Invalid room ID");
+        }
+    }
+    
+    public static void viewRoomDetail(Scanner sc){
+        System.out.println("List of rooms");
+        System.out.println("");
+        HashMap<Integer,String> map = getRoomIDQuery(db);
+        System.out.print("pick the number that you want to know: ");
+        int c = sc.nextInt();
+        sc.nextLine();
+        if(map.get(c)==null){
+            System.out.println("Something wents wrong");
+        }else{
+            getAllDetail(db,map.get(c));
+        } 
+    }
+    
+    public static void makeTransaction(Scanner sc){
+        System.out.println("Make transaction ");
+        System.out.print("Please enter your roomID: ");
+        String roomID= sc.nextLine();
+        System.out.print("Please enter the number of date: ");
+        int number = sc.nextInt();
     }
 }

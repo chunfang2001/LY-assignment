@@ -68,4 +68,54 @@ public class UserQuery {
         }
         return true;
     }
+    public static boolean giveReviewQuery(Database db, String roomID, String comment, double rating){
+        try{
+            db.getConnection().prepareStatement(String.format("INSERT INTO REVIEW(`roomID`,`userid`,`comment`,`rating`) values('%s','%s','%s','%f')",roomID,user.getId(),comment,rating)).executeUpdate();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return true;
+    }
+    
+    public static boolean checkExist(Database db, String roomID){
+        try{
+           ResultSet rs = db.getConnection().prepareStatement(String.format("Select * from ROOM where roomID = '%s'",roomID)).executeQuery();
+           if(rs.next()){
+               return true;
+           }
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+    public static void getAllDetail(Database db, String roomID){
+        try{
+            ResultSet rs = db.getConnection().prepareStatement(String.format("Select * from ROOM where roomID = '%s'",roomID)).executeQuery();
+            if(rs.next()){
+                System.out.println("RoomID: "+rs.getString("roomID"));
+                System.out.println("amountOfGuest: "+rs.getInt("amountOfGuest"));
+                System.out.println("amountOfBed: "+rs.getInt("amountOfBed"));
+                System.out.println("price: "+rs.getInt("price"));
+                System.out.println("");
+            }
+            ResultSet rs2 = db.getConnection().prepareStatement(String.format("Select * from REVIEW where roomID = '%s'",roomID)).executeQuery();
+            System.out.println("List of Review");
+            System.out.println("");
+            double sum =0;
+            int count = 0;
+            while(rs2.next()){
+                System.out.println("Review "+(count+1));
+                System.out.println("Rating "+(count+1)+": "+rs2.getDouble("rating"));
+                System.out.println("Comment "+(count+1)+": "+rs2.getString("comment"));
+                sum+= rs2.getDouble("rating");
+                System.out.println("");
+                count++;
+            }
+            System.out.println("Average Rating: "+sum/count);
+            System.out.println("");
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
 }
