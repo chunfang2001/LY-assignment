@@ -110,7 +110,7 @@ public class LYAssignment {
         }
     }
     public static void adminLogin(Scanner sc){
-        System.out.println("========== Customer Login Phase ==========");
+        System.out.println("========== Admin Login Phase ==========");
         System.out.print("Please enter your email: ");
         String email = sc.nextLine();
         System.out.print("Please enter your password: ");

@@ -55,7 +55,7 @@ public class LoginQuery {
     }
     public static boolean loginQueryAdmin(Database db, String email,String password){
         try{
-            ResultSet rs = db.getConnection().prepareStatement(String.format("Select * from admin where email = '%s' AND password ='%s'",email,password)).executeQuery();
+            ResultSet rs = db.getConnection().prepareStatement(String.format("Select * from ADMIN where email = '%s' AND password ='%s'",email,password)).executeQuery();
             if(rs.next()){
                 return true;
             }       
